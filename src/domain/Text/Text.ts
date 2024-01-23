@@ -13,8 +13,8 @@ export default class Text extends Entity {
         this.languageId = languageId;
     }
 
-    public static create(languageId: LanguageId): Text {
-        const uuid = TextId.create();
+    public static create(languageId: LanguageId, id?: string): Text {
+        const uuid = TextId.create(id);
         return new Text(uuid, languageId);
     }
 

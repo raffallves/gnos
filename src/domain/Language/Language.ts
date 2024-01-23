@@ -21,8 +21,8 @@ export default class Language extends Entity {
         this.settings = settings;
     }
 
-    public static create(name: string, settings: LanguageSettings) {
-        const uuid = LanguageId.create();
+    public static create(name: string, settings: LanguageSettings, id?: string) {
+        const uuid = LanguageId.create(id);
         return new Language(uuid, name.toLocaleLowerCase(), settings);
     }
 
@@ -36,5 +36,9 @@ export default class Language extends Entity {
 
     public getSettings(): LanguageSettings {
         return this.settings;
+    }
+
+    public changeSettings(newSettings: LanguageSettings): void {
+        // implement
     }
 }

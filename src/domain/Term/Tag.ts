@@ -9,8 +9,8 @@ export default class Tag extends Entity {
         this.tagName = name;
     }
 
-    public static create(name: string) {
-        const uuid = TagId.create();
+    public static create(name: string, id?: string) {
+        const uuid = TagId.create(id);
         return new Tag(uuid, name);
     }
 

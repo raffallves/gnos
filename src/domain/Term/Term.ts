@@ -62,9 +62,10 @@ export default class Term extends Entity {
         definition: string = '',
         contextPhrase: string = '',
         termTags: TagId[] = [],
-        level: number = 0
+        level: number = 0,
+        id?: string
     ): Term {
-        const uuid = TermId.create();
+        const uuid = TermId.create(id);
         term = term.toLocaleLowerCase();
         const termLevel = TermLevel.create(level);
         

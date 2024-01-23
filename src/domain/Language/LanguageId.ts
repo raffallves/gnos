@@ -5,8 +5,8 @@ export default class LanguageId extends UUID {
         super(uuid);
     }
 
-    public static create(): LanguageId {
-        const newId = super.create().getValue();
+    public static create(id?: string): LanguageId {
+        const newId = super.create(id).getValue();
         return new LanguageId(newId);
     }
 }
