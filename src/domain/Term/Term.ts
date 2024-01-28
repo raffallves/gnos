@@ -77,7 +77,9 @@ export default class Term extends Entity {
     }
 
     public setLevel(newLevel: number) {
-        const termLevel = TermLevel.create(newLevel);
-        this.level = termLevel;
+        if (this.level.getValue() !== newLevel) {
+            const termLevel = TermLevel.create(newLevel);
+            this.level = termLevel;
+        }
     }
 }

@@ -7,7 +7,7 @@ export default abstract class ValueObject<T> {
 
     abstract equals(object?: ValueObject<T>): boolean;
 
-    protected getValue(): T {
+    public getValue(): T {
         return this.value;
     }
 }

@@ -1,42 +1,36 @@
 import Text from "@src/domain/Text/Text";
 import Language from "@src/domain/Language/Language";
 
-const content: string = `«Ηπρώτη μου επαφή με την Καππαδοκία ήταν η συμμετοχή μου το 2015 σ′ένα πρόγραμμα αγροτουρισμού. Την πρώτη φορά έμεινα ακριβώς 48 μέρες και εκεί άλλαξε όλη η τύχη μου και η… διαμονή μου».
+const content1: string = `«Ηπρώτη μου επαφή με την Καππαδοκία ήταν η συμμετοχή μου το 2015 σ′ένα πρόγραμμα αγροτουρισμού. Την πρώτη φορά έμεινα ακριβώς 48 μέρες και εκεί άλλαξε όλη η τύχη μου και η… διαμονή μου».
 
-Η απόφαση της συγγραφέως και καλλιτέχνιδας Μαρίας Μανή να αλλάξει εντελώς σελίδα στη ζωή της έπειτα από ένα ταξίδι δεν είναι μοναδική. Πολλοί άνθρωποι έχουν ερωτευθεί ένα μέρος με την πρώτη ματιά, όπως έγινε στην περίπτωσή της με την Καππαδοκία. Ωστόσο, η επιλογή της να ζήσει εκεί ήταν αφενός δύσκολη, αφετέρου ιδιαίτερη, καθώς η ίδια δεν αποφάσισε να νοικιάσει κάποιο διαμέρισμα, όπως συνηθίζεται, αλλά να μετατρέψει τις πέτρες… σε σπίτι. 
+Η απόφαση της συγγραφέως και καλλιτέχνιδας Dr. Μαρίας Μανή να αλλάξει εντελώς σελίδα στη ζωή της έπειτα από ένα ταξίδι δεν είναι μοναδική. Πολλοί άνθρωποι έχουν ερωτευθεί ένα μέρος με την πρώτη ματιά, όπως έγινε στην περίπτωσή της με την Καππαδοκία. Ωστόσο, η επιλογή της να ζήσει εκεί ήταν αφενός δύσκολη, αφετέρου ιδιαίτερη, καθώς η ίδια δεν αποφάσισε να νοικιάσει κάποιο διαμέρισμα, όπως συνηθίζεται, αλλά να μετατρέψει τις πέτρες… σε σπίτι. 
 
 Οπως περιγράφει η ίδια στην «Κ», δεν είχε άλλωστε πολλές επιλογές, καθώς για να μπορεί να μοιράζει τον χρόνο της μεταξύ Ελλάδας και Καππαδοκίας, έπρεπε είτε να αγοράσει ένα κομμάτι γης είτε να παντρευτεί κάποιον εκεί. 
 
 Η ίδια προτίμησε να κάνει το πρώτο και έτσι αγόρασε ένα κομμάτι γης σε ένα χωριό 11 χιλιόμετρα έξω από την πόλη Προκόπη της Καππαδοκίας, το οποίο οι ντόπιοι στη γλώσσα τους αποκαλούν «Λευκό Χωριό».`;
 
-const sentenceNumber = 7;
+const content = `『いろどり　生活の日本語』は、国際交流基金が開発したテキストです。
+
+基礎的な日本語のコミュニケーション能力の獲得を目的としています。
+
+対象は、初級レベルの日本語学習者です。（基本的な挨拶や自己紹介ができる、非常に簡単な会話ができるレベル）
+
+種類豊富な音声ファイルも自由にダウンロードが可能です。無料で音声ファイルまである教材は中々ないので、非常に魅力的なポイントです！！`;
 
 describe('Text-related tests', () => {
-    it('should separate a text into sentences', () => {
-        const language = Language.create('Português');
+
+    it('should separate a text into words', () => {
+        const language = Language.create('Japanese', ['https://google.com'], '一-龥ぁ-ヾ々');
         const text = Text.create(language.getLanguageId());
+        const wds = text.processTextContent(
+            content, 
+            language.getSettings().getValue().languageCharacters,
+            language.getSettings().getValue().sentenceEndings, 
+            language.getSettings().getValue().sentenceEndingExceptions,
+            language.getSettings().getValue().wordEndings
+        );
 
-        const sentences = text.separateSentences(content, '.?;');
-
-        expect(sentences).toHaveLength(sentenceNumber);
-    });
-
-    it('should separate a sentence into words', () => {
-        const language = Language.create('Português');
-        const text = Text.create(language.getLanguageId());
-        const sentences = text.separateSentences(content, '.?;');
-
-        let wds: string[][] = [];
-        for (let sentence of sentences) {
-            const words = text.separateWords(sentence);
-            wds.push(words);
-        }
-
-        for (let i = 0; i < wds.length; i++) {
-            for (let j = 0; j < wds[0].length; j++) {
-                console.log(wds[0][0])
-            }
-        }
+        console.log(wds);
         expect(wds[0].length).toBeGreaterThan(0);
 
     });

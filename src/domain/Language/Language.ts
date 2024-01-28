@@ -1,15 +1,7 @@
 import Entity from "@src/domain/CommonAbstractions/Entity";
 import LanguageId from "@src/domain/Language/LanguageId";
-
-interface LanguageSettings {
-    languageCode: string,
-    sentenceEndings: string,
-    sentenceEndingExcpetions: string,
-    characterSubstitutions: string,
-    wordEndings: string,
-    readingDirection: string,
-    dictionaries: string[]
-}
+import LanguageSettings, { ILanguageSettings } from "@src/domain/Language/LanguageSettings";
+import ISO6391 from 'iso-639-1';
 
 export default class Language extends Entity {
     private languageName: string;
@@ -21,9 +13,30 @@ export default class Language extends Entity {
         this.settings = settings;
     }
 
-    public static create(name: string, settings: LanguageSettings, id?: string) {
+    public static create(
+        name: string, 
+        dictionaries: string[],
+        languageCharacters: string,
+        splitEachChar: boolean,
+        sentenceEndings?: string,
+        sentenceEndingExceptions?: string,
+        characterSubstitutions?: string,
+        readingDirection?: string,
+        id?: string
+        ): Language {
         const uuid = LanguageId.create(id);
-        return new Language(uuid, name.toLocaleLowerCase(), settings);
+        const languageCode = ISO6391.getCode(name);
+        const languageSettings = LanguageSettings.create({
+            languageCode,
+            languageCharacters,
+            splitEachChar,
+            sentenceEndings,
+            sentenceEndingExceptions,
+            characterSubstitutions,
+            readingDirection,
+            dictionaries
+        });
+        return new Language(uuid, name.toLocaleLowerCase(), languageSettings);
     }
 
     public getName(): string {
@@ -38,7 +51,19 @@ export default class Language extends Entity {
         return this.settings;
     }
 
-    public changeSettings(newSettings: LanguageSettings): void {
-        // implement
+    public changeSettings(inputSettings: any): void {
+        if (!inputSettings || typeof inputSettings !== 'object') {
+            throw new Error('Invalid input format.');
+        }
+
+        const updatedSettings = {...this.getSettings().getValue()};
+
+        for (const key in updatedSettings) {
+            if (inputSettings.hasOwnProperty(key)) {
+                updatedSettings[key as keyof ILanguageSettings] = inputSettings[key];
+            }
+        }
+
+        this.settings = LanguageSettings.create(updatedSettings);
     }
 }
