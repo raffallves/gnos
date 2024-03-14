@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+service TextProcessing {
+    rpc ProcessEnglishText (stream TextRequest) returns (stream TextResponse);
+    rpc ProcessPortugueseText (stream TextRequest) returns (stream TextResponse);
+    rpc ProcessSpanishText (stream TextRequest) returns (stream TextResponse);
+    rpc ProcessFrenchText (stream TextRequest) returns (stream TextResponse);
+    rpc ProcessGreekText (stream TextRequest) returns (stream TextResponse);
+    rpc ProcessGermanText (stream TextRequest) returns (stream TextResponse);
+    rpc ProcessItalianText (stream TextRequest) returns (stream TextResponse);
+    rpc ProcessRussianText (stream TextRequest) returns (stream TextResponse);
+    rpc ProcessJapaneseText (stream TextRequest) returns (stream TextResponse);
+}
+
+message TextRequest {
+    string content = 1;
+}
+
+message TextResponse {
+    repeated Token document = 1;
+}
+
+message Token {
+    string text = 1;
+    string pos = 2;
+    repeated Morph morph = 3;
+}
+
+message Morph {
+    map<string, string> features = 1;
+}

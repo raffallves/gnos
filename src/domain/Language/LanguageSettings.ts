@@ -68,6 +68,10 @@ export default class LanguageSettings extends ValueObject<ILanguageSettings> {
         return new LanguageSettings(settings);
     }
 
+    public static isKey<T extends ILanguageSettings>(x: T, key: PropertyKey): key is keyof T {
+        return key in x;
+    }
+
     public equals(object?: LanguageSettings): boolean {
         if (object == null || !(object instanceof LanguageSettings)) {
             return false;

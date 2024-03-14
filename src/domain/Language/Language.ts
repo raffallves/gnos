@@ -17,7 +17,7 @@ export default class Language extends Entity {
         name: string, 
         dictionaries: string[],
         languageCharacters: string,
-        splitEachChar: boolean,
+        splitEachChar?: boolean,
         sentenceEndings?: string,
         sentenceEndingExceptions?: string,
         characterSubstitutions?: string,
@@ -56,11 +56,15 @@ export default class Language extends Entity {
             throw new Error('Invalid input format.');
         }
 
-        const updatedSettings = {...this.getSettings().getValue()};
+        const updatedSettings: any = {...this.getSettings().getValue()};
 
         for (const key in updatedSettings) {
-            if (inputSettings.hasOwnProperty(key)) {
-                updatedSettings[key as keyof ILanguageSettings] = inputSettings[key];
+            if (
+                inputSettings.hasOwnProperty(key) && 
+                LanguageSettings.isKey(updatedSettings, key) &&
+                typeof updatedSettings[key] === typeof inputSettings[key]
+            ) {
+                updatedSettings[key] = inputSettings[key];
             }
         }
 

@@ -3,10 +3,12 @@ import TextId from "@src/domain/Text/TextId";
 import TermId from "@src/domain/Term/TermId";
 import LanguageId from "@src/domain/Language/LanguageId";
 
+export type TextContent = TermId | string;
+
 export default class Text extends Entity {
     private languageId: LanguageId;
-    private title: TermId[] = [];
-    private content: TermId[][] = [[]];
+    private title: TextContent[] = [];
+    private content: TextContent[][] = [[]];
 
     private constructor(id: TextId, languageId: LanguageId) {
         super(id);
@@ -26,19 +28,22 @@ export default class Text extends Entity {
         this.title = titleData;
     }
 
-    public getTitle(): TermId[] {
+    public getTitle(): TextContent[] {
         return this.title;
     }
 
-    public getContent(): TermId[][] {
+    public getContent(): TextContent[][] {
         return this.content;
     }
 
-    private separateSentences(rawText: string, splitter: string, exceptionSplitter: string): string[] {
-        rawText.replace(new RegExp(`(${exceptionSplitter})\\s`, 'gu'), '$1‧');
-        rawText.replace(new RegExp(`([${splitter}¶])\\s`, 'gu'), '$1\n');
-        rawText.replace(" ¶\n", "\n¶\n");
-        rawText.replace('‧', ' ');
+    private separateSentences(rawText: string, splitter: string, exceptionSplitter: string, splitEachChar: boolean): string[] {
+        if (splitEachChar) {
+            rawText = rawText.replace(new RegExp(`([^\s])`, 'gu'), "$1 ").trim();
+        }
+        rawText = rawText.replace(new RegExp(`(${exceptionSplitter})\\s`, 'gu'), '$1‧');
+        rawText = rawText.replace(new RegExp(`([${splitter}¶])\\s`, 'gu'), '$1\n');
+        rawText = rawText.replace(" ¶\n", "\n¶\n");
+        rawText = rawText.replace('‧', ' ');
         return rawText.split('\n');
     }
 
@@ -51,9 +56,9 @@ export default class Text extends Entity {
         languageCharacters: string,
         splitter: string, 
         exceptionSplitter: string, 
-        wordSplitter: string
+        splitEachChar: boolean = false
     ): string[][] {
-        const sentences = this.separateSentences(text, splitter, exceptionSplitter);
+        const sentences = this.separateSentences(text, splitter, exceptionSplitter, splitEachChar);
         const content: string[][] = [];
         sentences.forEach(sentence => {
             const words = this.separateWords(sentence, languageCharacters);
